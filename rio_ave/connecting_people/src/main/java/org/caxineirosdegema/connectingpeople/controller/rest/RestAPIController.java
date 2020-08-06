@@ -30,7 +30,7 @@ public class RestAPIController {
     private EventService eventService;
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}")
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUser(@PathVariable Integer id) {
 
         MockingStuff mockingStuff = new MockingStuff();
@@ -53,8 +53,7 @@ public class RestAPIController {
 
     }
 
-
-    @RequestMapping(method = RequestMethod.POST, path = "/create-user")
+    @RequestMapping(method = RequestMethod.POST, path = "/create-user", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
@@ -75,7 +74,7 @@ public class RestAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.PUT, path = "/edit-user/{id}")
+    @RequestMapping(method = RequestMethod.PUT, path = "/edit-user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity editUser(@PathVariable Integer id, @Valid @RequestBody User newUser, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
@@ -95,7 +94,7 @@ public class RestAPIController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path="/delete-user/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, path="/delete-user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteUser(@PathVariable Integer id) {
         if(userService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -104,7 +103,7 @@ public class RestAPIController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/event-set")
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/event-set", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Event>> getUserEvents(@PathVariable Integer id) {
 
         MockingStuff mockingStuff = new MockingStuff();
@@ -134,7 +133,7 @@ public class RestAPIController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/friends")
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/friends", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getUserFriends(@PathVariable Integer id) {
 
         MockingStuff mockingStuff = new MockingStuff();
@@ -166,7 +165,7 @@ public class RestAPIController {
 
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/user/{uid}/event/{eid}")
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{uid}/event/{eid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Event> getEvent(@PathVariable Integer uid, @PathVariable Integer eid) {
 
         MockingStuff mockingStuff = new MockingStuff();
@@ -193,7 +192,7 @@ public class RestAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/create-event")
+    @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/create-event", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createEvent(@PathVariable Integer uid, @Valid @RequestBody Event event, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
@@ -209,7 +208,7 @@ public class RestAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/edit-event/{eid}")
+    @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/edit-event/{eid}", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity editEvent(@PathVariable Integer uid, @PathVariable Integer eid, @Valid @RequestBody Event event, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
@@ -227,7 +226,7 @@ public class RestAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path="/user/{uid}/delete-event/{eid}")
+    @RequestMapping(method = RequestMethod.DELETE, path="/user/{uid}/delete-event/{eid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteEvent(@PathVariable Integer uid, @PathVariable Integer eid) {
 
         if(eventService.delete(uid, eid)) {
@@ -240,46 +239,7 @@ public class RestAPIController {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
     public ApplicationService getApplicationService() {
         return applicationService;
     }
