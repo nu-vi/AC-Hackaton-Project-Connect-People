@@ -2,6 +2,8 @@ package org.caxineirosdegema.connectingpeople.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -15,13 +17,17 @@ public class User {
     @NotBlank(message = "Name is mandatory")
     private String name;
 
+    @NotNull
+    @NotBlank
+    private String password;
+
     @Email
     private String email;
     private String phone;
     private String city;
 
-    private List<User> friendsList;
-    private Set<Event> eventSet;
+    private List<User> friendsList = new LinkedList<>();
+    private Set<Event> eventSet = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -63,13 +69,17 @@ public class User {
         this.city = city;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public List<User> getFriendsList() {
         return friendsList;
     }
-
-
-
-
 
     public void setFriendsList(List<User> friendsList) {
         this.friendsList = friendsList;
@@ -81,5 +91,10 @@ public class User {
 
     public void setEventSet(Set<Event> eventSet) {
         this.eventSet = eventSet;
+    }
+
+    public void removeComplexObjects() {
+        eventSet = null;
+        friendsList = null;
     }
 }

@@ -4,11 +4,14 @@ import org.caxineirosdegema.connectingpeople.model.User;
 
 public interface UserService {
 
-    void addUser(User user);
+    boolean addUser(User user);
 
     User get(Integer id);
 
-    User saveOrUpdate(User user);
+    boolean saveOrUpdate(User oldUser, User newUser);
 
-    void delete(Integer id);
+    boolean delete(Integer id);
+
+    Integer getNextId();
+
 }

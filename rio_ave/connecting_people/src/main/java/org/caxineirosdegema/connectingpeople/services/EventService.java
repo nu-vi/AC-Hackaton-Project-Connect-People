@@ -5,12 +5,12 @@ import org.caxineirosdegema.connectingpeople.model.User;
 
 public interface EventService {
 
-    void addEvent(Event event);
+    boolean addEvent(Event event, Integer uid);
 
-    Event get(Integer id);
+    Event get(Integer uid, Integer eid);
 
-    Event saveOrUpdate(Event event);
+    boolean saveOrUpdate(Event event, Integer uid);
 
-    void delete(Integer id);
+    boolean delete(Integer uid, Integer eid);
 
 }

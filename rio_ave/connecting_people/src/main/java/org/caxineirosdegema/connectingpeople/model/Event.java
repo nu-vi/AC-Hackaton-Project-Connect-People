@@ -26,6 +26,8 @@ public class Event {
     @NotBlank(message = "Event access is mandatory")
     private boolean publicAccess;
 
+    private String ownerName;
+
     @NotNull(message = "Event owner is mandatory")
     @NotBlank(message = "Event owner is mandatory")
     private User owner;
@@ -78,5 +80,17 @@ public class Event {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public void removeComplexObjects() {
+        owner = null;
     }
 }
