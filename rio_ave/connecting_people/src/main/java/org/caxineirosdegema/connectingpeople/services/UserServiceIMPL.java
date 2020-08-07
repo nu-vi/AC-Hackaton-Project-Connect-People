@@ -78,7 +78,7 @@ public class UserServiceIMPL implements UserService{
 
     @Override
     public Integer getNextId() {
-        Integer toReturn = userID++;
+        Integer toReturn = ++userID;
         this.userID = userID++;
 
         return toReturn;

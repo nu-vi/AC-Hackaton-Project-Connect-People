@@ -1,5 +1,6 @@
 package org.caxineirosdegema.connectingpeople.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 import javax.validation.constraints.*;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     private Integer id;

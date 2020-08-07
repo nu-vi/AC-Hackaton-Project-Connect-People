@@ -1,13 +1,10 @@
 package org.caxineirosdegema.connectingpeople.controller.rest;
 
-import org.caxineirosdegema.connectingpeople.MockingStuff;
 import org.caxineirosdegema.connectingpeople.model.Event;
 import org.caxineirosdegema.connectingpeople.model.User;
 import org.caxineirosdegema.connectingpeople.services.ApplicationService;
-import org.caxineirosdegema.connectingpeople.services.ApplicationServiceIMPL;
 import org.caxineirosdegema.connectingpeople.services.EventService;
 import org.caxineirosdegema.connectingpeople.services.UserService;
-import org.caxineirosdegema.connectingpeople.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.DocFlavor;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -23,6 +21,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class RestAPIController {
 
     private ApplicationService applicationService;
@@ -30,30 +29,35 @@ public class RestAPIController {
     private EventService eventService;
 
 
+    @RequestMapping(method = RequestMethod.POST, path= "/login")
+    public ResponseEntity login(@Valid @RequestBody User user, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if(applicationService.authenticateUser(user.getEmail(), user.getPassword())) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
     @RequestMapping(method = RequestMethod.GET, path = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUser(@PathVariable Integer id) {
 
-        MockingStuff mockingStuff = new MockingStuff();
 
-        mockingStuff.setUserService(userService);
-        mockingStuff.setEventService(eventService);
+        User user = userService.get(id);
 
+        User userDTO = user;
+        userDTO.removeComplexObjects();
 
-        if(mockingStuff.populate()) {
-            User user = userService.get(id);
-
-            User userDTO = user;
-            userDTO.removeComplexObjects();
-
-            return new ResponseEntity<>(userDTO, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/create-user", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @RequestMapping(method = RequestMethod.POST, path = "/create-user")
     public ResponseEntity createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
@@ -74,7 +78,7 @@ public class RestAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.PUT, path = "/edit-user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, path = "/edit-user/{id}")
     public ResponseEntity editUser(@PathVariable Integer id, @Valid @RequestBody User newUser, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
@@ -94,7 +98,7 @@ public class RestAPIController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path="/delete-user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.DELETE, path="/delete-user/{id}")
     public ResponseEntity deleteUser(@PathVariable Integer id) {
         if(userService.delete(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -103,64 +107,66 @@ public class RestAPIController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/event-set", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Event>> getUserEvents(@PathVariable Integer id) {
+    @RequestMapping(method = RequestMethod.POST, path="/user/{id}/add-friend")
+    public ResponseEntity addFriend(@Valid @RequestBody User user, BindingResult bindingResult, @PathVariable Integer id) {
 
-        MockingStuff mockingStuff = new MockingStuff();
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        mockingStuff.setEventService(eventService);
-        mockingStuff.setUserService(userService);
+        User u = userService.get(id);
 
-        if(mockingStuff.populate()) {
+        Set<User> userSet = applicationService.getUserSet();
 
-            User user = userService.get(id);
-
-            Set<Event> eventSet = user.getEventSet();
-
-            Set<Event> eventSetDTO = new HashSet<>();
-
-            for (Event event: eventSet) {
-                event.setOwnerName(event.getOwner().getName());
-                event.setOwner(null);
-
-                eventSetDTO.add(event);
+        for (User toFind : userSet) {
+            if (user.getEmail().equals(toFind.getEmail())) {
+                u.getFriendsList().add(toFind);
+                return new ResponseEntity<>(HttpStatus.OK);
             }
-
-            return new ResponseEntity<>(eventSetDTO, HttpStatus.OK);
-
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/event-set", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<Event>> getUserEvents(@PathVariable Integer id) {
+
+        User user = userService.get(id);
+
+        Set<Event> eventSet = user.getEventSet();
+
+        Set<Event> eventSetDTO = new HashSet<>();
+
+        for (Event event: eventSet) {
+            event.setOwnerName(event.getOwner().getName());
+            event.setOwner(null);
+
+            eventSetDTO.add(event);
+        }
+
+        return new ResponseEntity<>(eventSetDTO, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/user/{id}/friends", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getUserFriends(@PathVariable Integer id) {
 
-        MockingStuff mockingStuff = new MockingStuff();
 
-        mockingStuff.setEventService(eventService);
-        mockingStuff.setUserService(userService);
 
-        if(mockingStuff.populate()) {
+        User user = userService.get(id);
 
-            User user = userService.get(id);
+        List<User> userList = user.getFriendsList();
 
-            List<User> userList = user.getFriendsList();
+        List<User> userListDTO = new LinkedList<>();
 
-            List<User> userListDTO = new LinkedList<>();
+        for (User newUser: userList) {
+            newUser.removeComplexObjects();
 
-            for (User newUser: userList) {
-                newUser.removeComplexObjects();
-
-                userListDTO.add(newUser);
-
-            }
-
-            return new ResponseEntity<>(userListDTO, HttpStatus.OK);
+            userListDTO.add(newUser);
 
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userListDTO, HttpStatus.OK);
     }
 
 
@@ -168,31 +174,22 @@ public class RestAPIController {
     @RequestMapping(method = RequestMethod.GET, path = "/user/{uid}/event/{eid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Event> getEvent(@PathVariable Integer uid, @PathVariable Integer eid) {
 
-        MockingStuff mockingStuff = new MockingStuff();
 
-        mockingStuff.setUserService(userService);
-        mockingStuff.setEventService(eventService);
+        Event event = eventService.get(uid, eid);
 
 
-        if(mockingStuff.populate()) {
-            Event event = eventService.get(uid, eid);
+        Event eventDTO = event;
+        eventDTO.removeComplexObjects();
+        eventDTO.setOwnerName(userService.get(uid).getName());
 
 
-            Event eventDTO = event;
-            eventDTO.removeComplexObjects();
-            eventDTO.setOwnerName(userService.get(uid).getName());
+        return new ResponseEntity<>(eventDTO, HttpStatus.OK);
 
-
-
-            return new ResponseEntity<>(eventDTO, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/create-event", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/create-event")
     public ResponseEntity createEvent(@PathVariable Integer uid, @Valid @RequestBody Event event, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
@@ -208,7 +205,7 @@ public class RestAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/edit-event/{eid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/edit-event/{eid}")
     private ResponseEntity editEvent(@PathVariable Integer uid, @PathVariable Integer eid, @Valid @RequestBody Event event, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
@@ -226,7 +223,7 @@ public class RestAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path="/user/{uid}/delete-event/{eid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.DELETE, path="/user/{uid}/delete-event/{eid}")
     public ResponseEntity deleteEvent(@PathVariable Integer uid, @PathVariable Integer eid) {
 
         if(eventService.delete(uid, eid)) {
@@ -239,7 +236,46 @@ public class RestAPIController {
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public ApplicationService getApplicationService() {
         return applicationService;
     }
