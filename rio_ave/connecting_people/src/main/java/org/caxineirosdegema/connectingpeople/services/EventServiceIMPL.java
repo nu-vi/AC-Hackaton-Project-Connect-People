@@ -20,8 +20,7 @@ public class EventServiceIMPL implements EventService {
 
         User owner = userService.get(uid);
 
-        event.setOwner(owner);
-
+        event.setOwnerName(owner.getName());
         owner.getEventSet().add(event);
 
         List<User> userList = owner.getFriendsList();

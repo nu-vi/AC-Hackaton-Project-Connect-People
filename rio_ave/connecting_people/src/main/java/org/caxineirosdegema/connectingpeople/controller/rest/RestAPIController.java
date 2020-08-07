@@ -87,8 +87,8 @@ public class RestAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.PUT, path = "/edit-user/{id}")
-    public ResponseEntity editUser(@PathVariable Integer id, @Valid @RequestBody User newUser, BindingResult bindingResult) {
+    @RequestMapping(method = RequestMethod.POST, path = "/edit-user/{id}")
+    public ResponseEntity editUser(@Valid @RequestBody User newUser, BindingResult bindingResult, @PathVariable Integer id) {
 
         if(bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -97,6 +97,7 @@ public class RestAPIController {
         User oldUser = userService.get(id);
 
         newUser.setId(id);
+        newUser.setEmail(oldUser.getEmail());
         newUser.setFriendsList(oldUser.getFriendsList());
 
 
@@ -130,6 +131,12 @@ public class RestAPIController {
         for (User toFind : userSet) {
             if (user.getEmail().equals(toFind.getEmail())) {
                 u.getFriendsList().add(toFind);
+                Set<Event> eventSet = toFind.getEventSet();
+
+                for (Event event: eventSet) {
+                    u.getEventSet().add(event);
+                }
+
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         }
@@ -148,8 +155,7 @@ public class RestAPIController {
         Set<Event> eventSetDTO = new HashSet<>();
 
         for (Event event: eventSet) {
-            event.setOwnerName(event.getOwner().getName());
-            event.setOwner(null);
+
 
             eventSetDTO.add(event);
         }
@@ -199,7 +205,7 @@ public class RestAPIController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/create-event")
-    public ResponseEntity<User> createEvent(@PathVariable Integer uid, @Valid @RequestBody Event event, BindingResult bindingResult) {
+    public ResponseEntity<User> createEvent(@Valid @RequestBody Event event, BindingResult bindingResult, @PathVariable Integer uid) {
 
         if(bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

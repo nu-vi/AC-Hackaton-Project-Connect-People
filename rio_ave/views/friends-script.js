@@ -1,14 +1,53 @@
-var hash = location.hash.substr(1);
+
 
 $(document).ready(function() {
-    
-    $.ajax({
-            url: 'http://localhost:8080/connectpeople/api/user/' + hash + '/friends',
+
+            $.ajax({
+            url: 'http://localhost:8080/connectpeople/api/user/' + localStorage.getItem("id") + '/friends',
             async: true,
             success: successCallback,
             error: errorCallback
         });
-});
+
+    
+
+    $("#loginho").click(function() {
+        window.location.href = "feed-page.html";
+    });
+
+    $("#edit_profile").click(function() {
+        window.location.href = "editpage.html";
+    });
+
+    $("#newFriend_btn").click(function () {
+        $.ajax({
+            url: 'http://localhost:8080/connectpeople/api/user/' + localStorage.getItem("id") + '/add-friend',
+            type: "POST",
+            data: JSON.stringify({
+                email:$("#email").val()
+            }),
+            contentType: "application/json",
+            async: true,
+            success: success,
+            error: error
+        });
+
+    })
+    
+   });
+
+    
+
+function error(request, status, error) {
+    console.log(console.error);
+}
+
+function success(response) {
+
+    alert("HEYYYY");
+    console.log("hey");
+}
+
 
 function successCallback(response) {
     console.log("test");

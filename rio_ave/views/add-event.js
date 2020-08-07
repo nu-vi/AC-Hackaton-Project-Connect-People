@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     $("#new-event-button").click( function(e) {
         //e.preventDefault();
-        window.location.href= "newEvent.html#" + hash;
+        window.location.href= "newEvent.html";
     });
 
 });

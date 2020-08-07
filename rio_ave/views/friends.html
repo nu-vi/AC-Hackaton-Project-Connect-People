@@ -14,7 +14,7 @@
 <body>
 
 <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-*" style="background-color: #3f236c;">
-    <a class="navbar-brand" href="#"><img id="logo" src="resources/logo-nav-bar.png"></a>
+    <a id ="loginho" class="navbar-brand" href="#"><img id="logo" src="resources/logo-nav-bar.png"></a>
 
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -32,7 +32,7 @@
                 Options
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Edit Profile</a>
+                <a id="edit_profile" class="dropdown-item" href="#">Edit Profile</a>
                 <a class="dropdown-item" href="#">Friend's List</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">Logout</a>
@@ -41,6 +41,35 @@
     </div>
 </nav>
 
+<div class="container">
+<div class="row">
+    <div class="col-md-6">
+
+      <form id="newFriend_form" action="#">
+        <div class="form-row">
+          <div class="form-group">
+            <h2>Add friend</h2>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inputText4">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Name">
+          </div>
+        </div>
+        <div class="form-row">
+            <button id="newFriend_btn" type="submit" class="btn btn-primary">Submit</button>
+          </div>
+      </form>
+      </div>
+</div>
+</div>
+
+<br>
+<br>
+
+<!-- <button id="friendList" class="btn btn-primary">Friends List</button> -->
+        
 
 
 <div class="container">

@@ -15,21 +15,19 @@ public class User {
 
     private Integer id;
 
-    @NotNull(message = "Name is mandatory")
-    @NotBlank(message = "Name is mandatory")
+
     private String name;
 
-    @NotNull
-    @NotBlank
+
     private String password;
 
-    @Email
+
     private String email;
     private String phone;
     private String city;
 
-    private List<User> friendsList = new LinkedList<>();
-    private Set<Event> eventSet = new HashSet<>();
+    private List<User> friendsList;
+    private Set<Event> eventSet;
 
     public Integer getId() {
         return id;

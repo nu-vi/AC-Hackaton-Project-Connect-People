@@ -1,6 +1,9 @@
 $(document).ready(function () {
 
-    $("#newUser_btn").click( function() {
+    $("#newUser_btn").click( function(e) {
+
+        e.preventDefault();
+
         $.ajax({
             url: 'http://localhost:8080/connectpeople/api/create-user',
             type: "POST",
@@ -42,9 +45,10 @@ $(document).ready(function () {
 function success(response) {
 
     var id = response.id;
+    localStorage.setItem("id", id);
     alert(id);
 
-    window.location.href = "/feed-page.html#" + id;
+    window.location.href = "/feed-page.html";
 }
 
 function error(request, status, error) {
@@ -59,17 +63,3 @@ function successCallback(response) {
 function errorCallback(request, status, error) {
     console.log(error);
 }
-
-function populate(customerData) {
-
-    for (var i = 0; i < customerData.length; i++) {
-        var str = "<tr><td>" + customerData[i].firstName + "</td><td>"
-            + customerData[i].lastName + "</td><td>"
-            + customerData[i].email + "</td><td>"
-            + customerData[i].phone + "</td>"
-            + "<td><button type='button' class='btn btn-outline-success'>Edit</button></td>" +
-            "<td><button type='button' class='btn btn-outline-danger'>Delete</button></td></tr>";
-        $(str).appendTo('#users-table');
-    }
-
-};
