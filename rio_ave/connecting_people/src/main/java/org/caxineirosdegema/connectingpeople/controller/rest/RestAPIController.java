@@ -30,17 +30,26 @@ public class RestAPIController {
 
 
     @RequestMapping(method = RequestMethod.POST, path= "/login")
-    public ResponseEntity login(@Valid @RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<User> login(@Valid @RequestBody User user, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         if(applicationService.authenticateUser(user.getEmail(), user.getPassword())) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            Set<User> userSet = applicationService.getUserSet();
+
+            for (User u: userSet) {
+                if (u.getEmail().equals(user.getEmail())) {
+                    return new ResponseEntity<User>(u, HttpStatus.OK);
+                }
+            }
+
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
