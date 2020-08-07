@@ -38,14 +38,13 @@ $(document).ready(function () {
 
 })
 
-   
 
 function success(response) {
 
     var id = response.id;
     alert(id);
 
-    window.location.href = "/feed.html#" + id;
+    window.location.href = "/feed-page.html#" + id;
 }
 
 function error(request, status, error) {

@@ -1,7 +1,8 @@
 var hash = location.hash.substr(1);
 
 $(document).ready(function() {
-        $.ajax({
+    
+    $.ajax({
             url: 'http://localhost:8080/connectpeople/api/user/' + hash + '/friends',
             async: true,
             success: successCallback,

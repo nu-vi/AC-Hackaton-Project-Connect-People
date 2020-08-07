@@ -21,7 +21,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class RestAPIController {
 
     private ApplicationService applicationService;
@@ -199,14 +199,17 @@ public class RestAPIController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/{uid}/create-event")
-    public ResponseEntity createEvent(@PathVariable Integer uid, @Valid @RequestBody Event event, BindingResult bindingResult) {
+    public ResponseEntity<User> createEvent(@PathVariable Integer uid, @Valid @RequestBody Event event, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         if(eventService.addEvent(event, uid)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+
+            User u = userService.get(uid);
+
+            return new ResponseEntity<User>(u, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 

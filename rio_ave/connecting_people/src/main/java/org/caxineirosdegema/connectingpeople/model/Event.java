@@ -1,37 +1,36 @@
 package org.caxineirosdegema.connectingpeople.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Event {
 
     private Integer id;
 
-    @NotNull(message = "Event title is mandatory")
-    @NotBlank(message = "Event title is mandatory")
     private String title;
 
-    @NotNull(message = "Event description is mandatory")
-    @NotBlank(message = "Event description is mandatory")
+
     private String description;
 
-    @NotNull(message = "Event location is mandatory")
-    @NotBlank(message = "Event location is mandatory")
+
     private String location;
 
-    @NotNull(message = "Event access is mandatory")
-    @NotBlank(message = "Event access is mandatory")
+
     private boolean publicAccess;
 
     private String ownerName;
 
-    @NotNull(message = "Event owner is mandatory")
-    @NotBlank(message = "Event owner is mandatory")
+
     private User owner;
 
+    private String time;
+
+    private Integer numberOfPeople;
 
     public Integer getId() {
         return id;
@@ -88,6 +87,22 @@ public class Event {
 
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Integer getNumberOfPeople() {
+        return numberOfPeople;
+    }
+
+    public void setNumberOfPeople(Integer numberOfPeople) {
+        this.numberOfPeople = numberOfPeople;
     }
 
     public void removeComplexObjects() {
