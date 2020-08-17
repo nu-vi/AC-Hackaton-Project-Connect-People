@@ -16,4 +16,5 @@ A social network exclusively focused in organizing events with your network. Whe
 To run the app on your machine:
 
 Deploy the backend using tomcat using the command "mvn tomcat7:deploy" in the project directory.
+
 Regarding the Frontend, we suggest creating a webserver from the "views" directory.
