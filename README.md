@@ -7,13 +7,10 @@ A social network exclusively focused in organizing events with your network. Whe
 Developed for a 24h hackathon as the last project of a 14 weeks programming bootcamp.
 
 
-Disclaimer: the application will be further developed.
-
-
 RestAPI done in Java using Spring MVC.
 
 
-Frontend consists in Javascript and HTML.
+Frontend consists of Javascript and HTML.
 
 
 To run the app on your machine:
